@@ -1,0 +1,98 @@
+import axios from 'axios';
+import { Dispatch } from 'redux';
+import { ThunkAction } from 'redux-thunk';
+import { RootState } from '../store';
+
+const API_KEY = 'AIzaSyBPwB8cB4mFSqjKa0HPKTErg8e2gUbyVnc';
+const BASE_URL = 'https://www.googleapis.com/books/v1/volumes';
+
+export const SEARCH_BOOKS = 'SEARCH_BOOKS';
+export const LOAD_MORE_BOOKS = 'LOAD_MORE_BOOKS';
+export const SET_ERROR = 'SET_ERROR';
+export const SET_LOADING = 'SET_LOADING';
+
+interface SearchBooksAction {
+  type: typeof SEARCH_BOOKS;
+  payload: Book[];
+}
+
+interface LoadMoreBooksAction {
+  type: typeof LOAD_MORE_BOOKS;
+  payload: Book[];
+}
+
+interface SetErrorAction {
+  type: typeof SET_ERROR;
+  payload: string;
+}
+
+interface SetLoadingAction {
+  type: typeof SET_LOADING;
+  payload: boolean;
+}
+
+export type AppAction =
+  | SearchBooksAction
+  | LoadMoreBooksAction
+  | SetErrorAction
+  | SetLoadingAction;
+
+export interface Book {
+  id: string;
+  volumeInfo: {
+    title: string;
+    imageLinks?: {
+      thumbnail: string;
+    };
+    categories?: string[];
+    authors?: string[];
+  };
+}
+
+export const searchBooks = (
+  query: string,
+  category: string,
+  sorting: string
+): ThunkAction<void, RootState, null, AppAction> => {
+  return async (dispatch: Dispatch<AppAction>) => {
+    dispatch({ type: SET_LOADING, payload: true });
+    try {
+      const response = await axios.get(BASE_URL, {
+        params: {
+          q: query,
+          subject: category === 'all' ? undefined : category,
+          orderBy: sorting,
+          maxResults: 30,
+          key: API_KEY,
+        },
+      });
+      dispatch({ type: SEARCH_BOOKS, payload: response.data.items });
+    } catch (error) {
+      dispatch({ type: SET_ERROR, payload: 'Error fetching data from API' });
+    } finally {
+      dispatch({ type: SET_LOADING, payload: false });
+    }
+  };
+};
+
+export const loadMoreBooks = (): ThunkAction<void, RootState, null, AppAction> => {
+  return async (dispatch: Dispatch<AppAction>, getState: () => RootState) => {
+    const { currentPage } = getState().appState;
+    const nextPage = currentPage + 1;
+    dispatch({ type: SET_LOADING, payload: true });
+    try {
+      const response = await axios.get(BASE_URL, {
+        params: {
+          startIndex: nextPage * 30,
+          maxResults: 30,
+          key: API_KEY,
+        },
+      });
+      dispatch({ type: LOAD_MORE_BOOKS, payload: response.data.items });
+    } catch (error) {
+      dispatch({ type: SET_ERROR, payload: 'Error fetching data from API' });
+    } finally {
+      dispatch({ type: SET_LOADING, payload: false });
+    }
+  };
+};
