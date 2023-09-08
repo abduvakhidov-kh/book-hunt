@@ -58,11 +58,11 @@ To create a production build of the application, run:
 
   ```bash
   npm run build
+  ```
 
-The optimized production build will be generated in the build directory.
-Contributing
+  The optimized production build will be generated in the build directory.
 
-Contributions are welcome! If you'd like to contribute to this project, please follow these guidelines:
+### Contributions are welcome! If you'd like to contribute to this project, please follow these guidelines:
 
     Fork the repository.
     Create a new branch for your feature or bug fix: git checkout -b feature/your-feature-name or git checkout -b bugfix/your-bug-fix.
