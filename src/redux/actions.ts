@@ -10,6 +10,12 @@ export const SEARCH_BOOKS = 'SEARCH_BOOKS';
 export const LOAD_MORE_BOOKS = 'LOAD_MORE_BOOKS';
 export const SET_ERROR = 'SET_ERROR';
 export const SET_LOADING = 'SET_LOADING';
+export const SET_LAST_SEARCH = 'SET_LAST_SEARCH';
+
+interface SetLastSearch {
+  type: typeof SET_LAST_SEARCH,
+  payload: string,
+}
 
 interface SearchBooksAction {
   type: typeof SEARCH_BOOKS;
@@ -35,7 +41,8 @@ export type AppAction =
   | SearchBooksAction
   | LoadMoreBooksAction
   | SetErrorAction
-  | SetLoadingAction;
+  | SetLoadingAction
+  | SetLastSearch;
 
 export interface Book {
   id: string;
@@ -49,6 +56,11 @@ export interface Book {
   };
 }
 
+export const setLastSearch = (query: string) => ({
+  type: SET_LAST_SEARCH,
+  payload: query,
+});
+
 export const searchBooks = (
   query: string,
   category: string,
@@ -56,6 +68,7 @@ export const searchBooks = (
 ): ThunkAction<void, RootState, null, AppAction> => {
   return async (dispatch: Dispatch<AppAction>) => {
     dispatch({ type: SET_LOADING, payload: true });
+    console.log(category);
     try {
       const response = await axios.get(BASE_URL, {
         params: {
@@ -75,24 +88,30 @@ export const searchBooks = (
   };
 };
 
-export const loadMoreBooks = (): ThunkAction<void, RootState, null, AppAction> => {
+export const loadMoreBooks = (
+  searchTerm: string
+): ThunkAction<void, RootState, null, AppAction> => {
   return async (dispatch: Dispatch<AppAction>, getState: () => RootState) => {
-    const { currentPage } = getState().appState;
+    const { currentPage, books } = getState().appState;
     const nextPage = currentPage + 1;
     dispatch({ type: SET_LOADING, payload: true });
     try {
       const response = await axios.get(BASE_URL, {
         params: {
+          q: searchTerm,
           startIndex: nextPage * 30,
           maxResults: 30,
           key: API_KEY,
         },
       });
-      dispatch({ type: LOAD_MORE_BOOKS, payload: response.data.items });
+      const newBooks = response.data.items;
+
+      dispatch({ type: LOAD_MORE_BOOKS, payload: [...books, ...newBooks] });
     } catch (error) {
-      dispatch({ type: SET_ERROR, payload: 'Error fetching data from API' });
+      dispatch({ type: SET_ERROR, payload: 'Ошибка при загрузке данных с API' });
     } finally {
       dispatch({ type: SET_LOADING, payload: false });
     }
   };
 };
+
