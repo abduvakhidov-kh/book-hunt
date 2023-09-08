@@ -11,6 +11,7 @@ export const LOAD_MORE_BOOKS = 'LOAD_MORE_BOOKS';
 export const SET_ERROR = 'SET_ERROR';
 export const SET_LOADING = 'SET_LOADING';
 export const SET_LAST_SEARCH = 'SET_LAST_SEARCH';
+export const SET_LOADING_MORE = 'SET_LOADING_MORE';
 
 interface SetLastSearch {
   type: typeof SET_LAST_SEARCH,
@@ -37,12 +38,18 @@ interface SetLoadingAction {
   payload: boolean;
 }
 
+interface SetLoadingMore {
+  type: typeof SET_LOADING_MORE;
+  payload: boolean;
+}
+
 export type AppAction =
   | SearchBooksAction
   | LoadMoreBooksAction
   | SetErrorAction
   | SetLoadingAction
-  | SetLastSearch;
+  | SetLastSearch
+  | SetLoadingMore;
 
 export interface Book {
   id: string;
@@ -94,7 +101,7 @@ export const loadMoreBooks = (
   return async (dispatch: Dispatch<AppAction>, getState: () => RootState) => {
     const { currentPage, books } = getState().appState;
     const nextPage = currentPage + 1;
-    dispatch({ type: SET_LOADING, payload: true });
+    dispatch({ type: SET_LOADING_MORE, payload: true });
     try {
       const response = await axios.get(BASE_URL, {
         params: {
@@ -110,7 +117,7 @@ export const loadMoreBooks = (
     } catch (error) {
       dispatch({ type: SET_ERROR, payload: 'Ошибка при загрузке данных с API' });
     } finally {
-      dispatch({ type: SET_LOADING, payload: false });
+      dispatch({ type: SET_LOADING_MORE, payload: false });
     }
   };
 };

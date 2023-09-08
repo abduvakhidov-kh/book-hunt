@@ -1,11 +1,13 @@
 import React from 'react';
 import BookCard from './BookCard';
 import styled from 'styled-components';
+import LoadingSkeleton from './LoadingSkeleton';
 
-const List = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  width: 100%;
 `;
 
 interface BookListProps {
@@ -20,15 +22,21 @@ interface BookListProps {
       authors?: string[];
     };
   }[];
+  loading: boolean
 }
 
-const BookList: React.FC<BookListProps> = ({ books }) => {
+const BookList: React.FC<BookListProps> = ({ books, loading }) => {
+
+  if (loading) {
+    return <LoadingSkeleton count={3  } />
+  }
+
   return (
-    <List>
+    <GridContainer>
       {books.map((book) => (
         <BookCard key={book.id} book={book} />
       ))}
-    </List>
+    </GridContainer>
   );
 };
 

@@ -7,6 +7,7 @@ import {
   SET_LOADING,
   Book,
   SET_LAST_SEARCH,
+  SET_LOADING_MORE,
 } from './actions';
 
 interface AppState {
@@ -15,6 +16,7 @@ interface AppState {
   loading: boolean;
   currentPage: number;
   lastSearch: string;
+  loadingMore: boolean,
 }
 
 const initialState: AppState = {
@@ -22,7 +24,8 @@ const initialState: AppState = {
   error: null,
   loading: false,
   currentPage: 1,
-  lastSearch: ''
+  lastSearch: '',
+  loadingMore: false,
 };
 
 const appReducer = (state = initialState, action: AppAction): AppState => {
@@ -41,7 +44,7 @@ const appReducer = (state = initialState, action: AppAction): AppState => {
     case LOAD_MORE_BOOKS:
       return {
         ...state,
-        books: [...state.books, ...action.payload],
+        books: [...action.payload],
         currentPage: state.currentPage + 1,
         error: null,
       };
@@ -54,6 +57,11 @@ const appReducer = (state = initialState, action: AppAction): AppState => {
       return {
         ...state,
         loading: action.payload,
+      };
+    case SET_LOADING_MORE:
+      return {
+        ...state,
+        loadingMore: action.payload,
       };
     default:
       return state;

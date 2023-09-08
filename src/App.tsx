@@ -6,19 +6,20 @@ import CategorySelect from './components/CategorySelect';
 import SortingSelect from './components/SortingSelect';
 import BookList from './components/BookList';
 import LoadMoreButton from './components/LoadMoreButton';
-import LoadingIndicator from './components/LoadingIndicator';
 import styled from 'styled-components';
 import { useAppSelector } from './store';
 import type {} from 'redux-thunk/extend-redux';
 import debounce from 'lodash/debounce';
+import LoadingSkeleton from './components/LoadingSkeleton';
 
 const AppContainer = styled.div`
   font-family: Arial, sans-serif;
   text-align: center;
-  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f2f2f2;
 `;
 
 const Title = styled.h1`
@@ -32,6 +33,18 @@ const ErrorMessage = styled.p`
   margin-top: 10px;
 `;
 
+const SectionContainer = styled.div`
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+`;
+
+const EmptySearchMessage = styled.p`
+  color: #999;
+  margin-top: 10px;
+`;
+
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -40,6 +53,7 @@ function App() {
   const books = useAppSelector((state) => state.appState.books);
   const error = useAppSelector((state) => state.appState.error);
   const loading = useAppSelector((state) => state.appState.loading);
+  const loadingMore = useAppSelector((state) => state.appState.loadingMore);
 
   const debouncedSearch = useCallback(
     debounce(
@@ -52,8 +66,16 @@ function App() {
   );
 
   const handleSearch = () => {
-    dispatch(setLastSearch(searchTerm));
-    debouncedSearch(searchTerm, selectedCategory, sorting);
+    if (searchTerm.trim() === '') {
+      dispatch({
+        type: 'SET_ERROR',
+        payload: 'Пожалуйста введите название книги в адрес поиска',
+      });
+    } else {
+      dispatch(setLastSearch(searchTerm));
+      debouncedSearch(searchTerm, selectedCategory, sorting);
+    }
+    
   };
 
   const handleLoadMore = () => {
@@ -67,26 +89,33 @@ function App() {
   return (
     <AppContainer>
       <Title>Поиск книг</Title>
+
       <SearchInput
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         handleSearch={handleSearch}
       />
-      <CategorySelect
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-      />
-      <SortingSelect sorting={sorting} setSorting={setSorting} />
-      {loading ? (
-        <LoadingIndicator />
-      ) : error ? (
-        <p className="error-message">{error}</p>
-      ) : books ? (
+      <SectionContainer>
+        <CategorySelect
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          />
+        <SortingSelect sorting={sorting} setSorting={setSorting} />
+      </SectionContainer>
+      {error ? (
+        <ErrorMessage>{error}</ErrorMessage>
+      ) : searchTerm && books && books.length > 0 ? (
         <>
-          <BookList books={books} />
-          <LoadMoreButton onLoadMore={handleLoadMore} />
+          <BookList books={books} loading={loading} />
+          {loadingMore ? (
+            <LoadingSkeleton count={3} />
+          ) : (
+            <LoadMoreButton onLoadMore={handleLoadMore} />
+          )}
         </>
-      ) : null}
+      ) : (
+        <EmptySearchMessage>Книг не найдено</EmptySearchMessage>
+      )}
     </AppContainer>
   );
 }

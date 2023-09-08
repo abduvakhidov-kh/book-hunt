@@ -2,32 +2,34 @@ import React from 'react';
 import styled from 'styled-components';
 
 const SearchContainer = styled.div`
-  margin-top: 20px;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+  max-width: 400px;
+  margin: 0 auto;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  outline: none;
-
-  &:focus {
-    border: 2px solid #007bff;
-  }
 `;
 
-const Button = styled.button`
-  background-color: #007bff;
-  color: white;
+const SearchInputField = styled.input`
+  flex: 1;
   border: none;
-  border-radius: 5px;
+  outline: none;
+  padding: 8px;
   font-size: 16px;
-  padding: 10px 20px;
+`;
+
+const SearchButton = styled.button`
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  margin-left: 8px;
   cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 
   &:hover {
     background-color: #0056b3;
@@ -36,11 +38,11 @@ const Button = styled.button`
 
 interface SearchInputProps {
   searchTerm: string;
-  setSearchTerm: (term: string) => void;
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
   handleSearch: () => void;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ searchTerm, setSearchTerm, handleSearch }) => {
+function SearchInput({ searchTerm, setSearchTerm, handleSearch }: SearchInputProps) {
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       handleSearch();
@@ -49,16 +51,16 @@ const SearchInput: React.FC<SearchInputProps> = ({ searchTerm, setSearchTerm, ha
 
   return (
     <SearchContainer>
-      <Input
+      <SearchInputField
         type="text"
         placeholder="Введите запрос"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         onKeyPress={handleKeyPress}
       />
-      <Button onClick={handleSearch}>Поиск</Button>
+      <SearchButton onClick={handleSearch}>Поиск</SearchButton>
     </SearchContainer>
   );
-};
+}
 
 export default SearchInput;
