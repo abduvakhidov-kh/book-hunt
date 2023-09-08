@@ -35,33 +35,29 @@ Follow these instructions to run the project locally on your machine.
 
 2. Navigate to the project directory:
 
-bash
+    ```bash
+    cd book-search-app
 
-cd book-search-app
+3. Install the project dependencies:
 
-Install the project dependencies:
-
-bash
-
+    ```bash
     npm install
 
-Usage
+### Usage
 
-    Start the development server:
+1. Start the development server:
 
-    bash
-
+    ```bash
     npm start
 
     Open your web browser and visit http://localhost:3000 to use the application.
 
-Build
+### Build
 
 To create a production build of the application, run:
 
-bash
-
-npm run build
+  ```bash
+  npm run build
 
 The optimized production build will be generated in the build directory.
 Contributing
