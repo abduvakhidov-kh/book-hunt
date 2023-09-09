@@ -46,7 +46,7 @@ const EmptySearchMessage = styled.p`
 `;
 
 function App() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState('Exapmle');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sorting, setSorting] = useState('relevance');
   const dispatch = useDispatch();

@@ -75,7 +75,6 @@ export const searchBooks = (
 ): ThunkAction<void, RootState, null, AppAction> => {
   return async (dispatch: Dispatch<AppAction>) => {
     dispatch({ type: SET_LOADING, payload: true });
-    console.log(category);
     try {
       const response = await axios.get(BASE_URL, {
         params: {
@@ -98,7 +97,7 @@ export const searchBooks = (
 export const loadMoreBooks = (
   searchTerm: string
 ): ThunkAction<void, RootState, null, AppAction> => {
-  return async (dispatch: Dispatch<AppAction>, getState: () => RootState) => {
+  return async (dispatch, getState) => {
     const { currentPage, books } = getState().appState;
     const nextPage = currentPage + 1;
     dispatch({ type: SET_LOADING_MORE, payload: true });
