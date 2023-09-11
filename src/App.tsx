@@ -5,45 +5,12 @@ import SearchInput from './components/SearchInput';
 import CategorySelect from './components/CategorySelect';
 import SortingSelect from './components/SortingSelect';
 import BookList from './components/BookList';
-import LoadMoreButton from './components/LoadMoreButton';
-import styled from 'styled-components';
 import { useAppSelector } from './store';
 import type {} from 'redux-thunk/extend-redux';
 import debounce from 'lodash/debounce';
 import LoadingSkeleton from './components/LoadingSkeleton';
-
-const AppContainer = styled.div`
-  font-family: Arial, sans-serif;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 auto;
-  padding: 20px;
-`;
-
-const Title = styled.h1`
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
-`;
-
-const ErrorMessage = styled.p`
-  color: red;
-  margin-top: 10px;
-`;
-
-const SectionContainer = styled.div`
-  margin: 20px 0;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-`;
-
-const EmptySearchMessage = styled.p`
-  color: #999;
-  margin-top: 10px;
-`;
+import { Button } from './components/styles/LoadMoreButton.styled';
+import { AppContainer, Title, SectionContainer, ErrorMessage, EmptySearchMessage } from './App.styled';
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('Exapmle');
@@ -65,7 +32,7 @@ function App() {
     []
   );
 
-  const handleSearch = () => {
+  const handleSearch = useCallback(() => {
     if (searchTerm.trim() === '') {
       dispatch({
         type: 'SET_ERROR',
@@ -76,15 +43,11 @@ function App() {
       debouncedSearch(searchTerm, selectedCategory, sorting);
     }
     
-  };
+  }, [searchTerm, selectedCategory, sorting]);
 
   const handleLoadMore = () => {
     dispatch(loadMoreBooks(searchTerm));
   };
-
-  useEffect(() => {
-    handleSearch();
-  }, [searchTerm, selectedCategory, sorting]);
 
   return (
     <AppContainer>
@@ -104,13 +67,13 @@ function App() {
       </SectionContainer>
       {error ? (
         <ErrorMessage>{error}</ErrorMessage>
-      ) : searchTerm && books && books.length > 0 ? (
+      ) : searchTerm && books.length > 0 ? (
         <>
           <BookList books={books} loading={loading} />
           {loadingMore ? (
             <LoadingSkeleton count={3} />
           ) : (
-            <LoadMoreButton onLoadMore={handleLoadMore} />
+            <Button onClick={handleLoadMore} />
           )}
         </>
       ) : (

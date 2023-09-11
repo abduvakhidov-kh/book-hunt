@@ -1,14 +1,8 @@
 import React from 'react';
 import BookCard from './BookCard';
-import styled from 'styled-components';
 import LoadingSkeleton from './LoadingSkeleton';
+import { GridContainer } from './styles/BookList.styled';
 
-const GridContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-  width: 100%;
-`;
 
 interface BookListProps {
   books: {
