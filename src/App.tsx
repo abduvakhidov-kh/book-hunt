@@ -30,15 +30,8 @@ function App() {
       }, 300)
 
   const handleSearch = useCallback(() => {
-    if (searchTerm.trim() === '') {
-      dispatch({
-        type: 'SET_ERROR',
-        payload: 'Пожалуйста введите название книги в адрес поиска',
-      });
-    } else {
-      dispatch(setLastSearch(searchTerm));
-      debouncedSearch(searchTerm, selectedCategory, sorting);
-    }
+    dispatch(setLastSearch(searchTerm));
+    debouncedSearch(searchTerm, selectedCategory, sorting);
   }, [searchTerm, selectedCategory, sorting]);
 
   const handleLoadMore = () => {

@@ -10,8 +10,17 @@ export const searchBooks = (
   category: string,
   sorting: string
 ): ThunkAction<void, RootState, null, AppAction> => {
-  return async (dispatch: Dispatch<AppAction>) => {
+  return async (dispatch: Dispatch<AppAction>) => {  
+    if (query === '') {
+      dispatch({
+        type: SET_ERROR,
+        payload: 'Пожалуйста введите название книги в адрес поиска',
+      });
+      
+      return
+    }
     dispatch({ type: SET_LOADING, payload: true });
+    
     try {
       const response = await axios.get(BASE_URL, {
         params: {
