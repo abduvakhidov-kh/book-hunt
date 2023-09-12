@@ -3,7 +3,8 @@ import { Dispatch } from "react";
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "../store";
 import { AppAction } from "../types";
-import { SET_LOADING, SEARCH_BOOKS, SET_ERROR, API_KEY, BASE_URL } from "./actions";
+import { SET_LOADING, SEARCH_BOOKS, SET_ERROR } from "./actions";
+import { BASE_URL, API_KEY } from "../constants";
 
 export const searchBooks = (
   query: string,

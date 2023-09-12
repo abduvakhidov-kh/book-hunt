@@ -2,7 +2,9 @@ import axios from "axios";
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "../store";
 import { AppAction } from "../types";
-import { SET_LOADING_MORE, BASE_URL, LOAD_MORE_BOOKS, SET_ERROR, API_KEY } from "./actions";
+import { SET_LOADING_MORE, LOAD_MORE_BOOKS, SET_ERROR } from "./actions";
+import { BASE_URL, API_KEY } from "../constants";
+
 
 export const loadMoreBooks = (
   searchTerm: string

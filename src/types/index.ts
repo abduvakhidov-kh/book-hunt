@@ -21,6 +21,17 @@ export interface CategorySelectProps {
   setSelectedCategory: (category: string) => void;
 }
 
+export interface SelectOption {
+  value: string
+  title: string
+}
+
+export interface SelectProps {
+  options: SelectOption[]
+  selected: string;
+  setSelected: (value: string) => void;
+}
+
 export interface SearchInputProps {
   searchTerm: string;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;

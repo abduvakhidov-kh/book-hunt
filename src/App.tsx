@@ -1,8 +1,6 @@
 import { useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import SearchInput from './components/SearchInput';
-import CategorySelect from './components/CategorySelect';
-import SortingSelect from './components/SortingSelect';
 import BookList from './components/BookList';
 import { useAppSelector } from './store';
 import type {} from 'redux-thunk/extend-redux';
@@ -13,6 +11,8 @@ import { AppContainer, Title, SectionContainer, ErrorMessage, EmptySearchMessage
 import { setLastSearch } from './redux/getLastSearch';
 import { loadMoreBooks } from './redux/loadMoreBooks';
 import { searchBooks } from './redux/searchBooks';
+import Select from './components/Select';
+import { categories, sortingOptions } from './constants';
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -69,11 +69,12 @@ function App() {
         handleSearch={handleSearch}
       />
       <SectionContainer>
-        <CategorySelect
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          />
-        <SortingSelect sorting={sorting} setSorting={setSorting} />
+        <Select
+          selected={selectedCategory}
+          setSelected={setSelectedCategory}
+          options={categories}
+        />
+        <Select selected={sorting} setSelected={setSorting} options={sortingOptions} />
       </SectionContainer>
       {getContent()}
     </AppContainer>
