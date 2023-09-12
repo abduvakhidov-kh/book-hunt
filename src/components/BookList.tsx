@@ -1,14 +1,9 @@
 import React from 'react';
 import BookCard from './BookCard';
-import LoadingSkeleton from './LoadingSkeleton';
 import { GridContainer } from './styles/BookList.styled';
 import { BookListProps } from '../types';
 
-const BookList: React.FC<BookListProps> = ({ books, loading }) => {
-
-  if (loading) {
-    return <LoadingSkeleton count={3  } />
-  }
+const BookList: React.FC<BookListProps> = ({ books }) => {
 
   return (
     <GridContainer>

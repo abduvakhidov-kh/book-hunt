@@ -14,7 +14,6 @@ export interface Book {
 
 export interface BookListProps {
   books: Book[];
-  loading: boolean
 }
 
 export interface CategorySelectProps {

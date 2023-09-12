@@ -15,7 +15,7 @@ import { loadMoreBooks } from './redux/loadMoreBooks';
 import { searchBooks } from './redux/searchBooks';
 
 function App() {
-  const [searchTerm, setSearchTerm] = useState('Exapmle');
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sorting, setSorting] = useState('relevance');
   const dispatch = useDispatch();
@@ -39,13 +39,33 @@ function App() {
       dispatch(setLastSearch(searchTerm));
       debouncedSearch(searchTerm, selectedCategory, sorting);
     }
-    
   }, [searchTerm, selectedCategory, sorting]);
 
   const handleLoadMore = () => {
     dispatch(loadMoreBooks(searchTerm));
   };
 
+  const getContent = () => {
+    if (loading) return <LoadingSkeleton count={4} />
+
+    if(error) return <ErrorMessage>{error}</ErrorMessage>
+
+    if(searchTerm && books.length > 0) {
+      return (
+        <>
+          <BookList books={books} />
+          {loadingMore ? (
+            <LoadingSkeleton count={3} />
+          ) : (
+            <Button onClick={handleLoadMore} />
+          )}
+        </>
+      )
+    }
+
+    return <EmptySearchMessage>Введите название книги в адрес поиска</EmptySearchMessage>
+  }
+ 
   return (
     <AppContainer>
       <Title>Поиск книг</Title>
@@ -62,20 +82,7 @@ function App() {
           />
         <SortingSelect sorting={sorting} setSorting={setSorting} />
       </SectionContainer>
-      {error ? (
-        <ErrorMessage>{error}</ErrorMessage>
-      ) : searchTerm && books.length > 0 ? (
-        <>
-          <BookList books={books} loading={loading} />
-          {loadingMore ? (
-            <LoadingSkeleton count={3} />
-          ) : (
-            <Button onClick={handleLoadMore} />
-          )}
-        </>
-      ) : (
-        <EmptySearchMessage>Книг не найдено</EmptySearchMessage>
-      )}
+      {getContent()}
     </AppContainer>
   );
 }
