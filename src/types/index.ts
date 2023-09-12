@@ -1,6 +1,7 @@
 import { SET_LAST_SEARCH, SEARCH_BOOKS, LOAD_MORE_BOOKS, SET_ERROR, SET_LOADING, SET_LOADING_MORE } from "../redux/actions";
 
 export interface Book {
+  id: string
   volumeInfo: {
     title: string;
     imageLinks?: {
@@ -12,17 +13,7 @@ export interface Book {
 }
 
 export interface BookListProps {
-  books: {
-    id: string;
-    volumeInfo: {
-      title: string;
-      imageLinks?: {
-        thumbnail: string;
-      };
-      categories?: string[];
-      authors?: string[];
-    };
-  }[];
+  books: Book[];
   loading: boolean
 }
 
