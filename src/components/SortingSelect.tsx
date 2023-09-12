@@ -1,10 +1,6 @@
 import React from 'react';
 import { SelectContainer, Select } from './styles/CategorySelect.styled';
-
-interface SortingSelectProps {
-  sorting: string;
-  setSorting: (sorting: string) => void;
-}
+import { SortingSelectProps } from '../types';
 
 const SortingSelect: React.FC<SortingSelectProps> = ({ sorting, setSorting }) => {
   return (

@@ -1,11 +1,6 @@
 import React from 'react';
 import { SearchContainer, SearchInputField, SearchButton } from './styles/SearchInput.styled';
-
-interface SearchInputProps {
-  searchTerm: string;
-  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
-  handleSearch: () => void;
-}
+import { SearchInputProps } from '../types';
 
 function SearchInput({ searchTerm, setSearchTerm, handleSearch }: SearchInputProps) {
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {

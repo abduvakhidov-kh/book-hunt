@@ -1,24 +1,9 @@
 import React from 'react';
 import { BookAuthors, BookCategory, BookImage, BookInfo, BookTitle, CardContainer, ImageContainer, PlaceholderImage } from './styles/BookCard.styled';
+import { Book } from '../types';
+import { truncateText } from '../utils';
 
-interface BookCardProps {
-  book: {
-    volumeInfo: {
-      title: string;
-      imageLinks?: {
-        thumbnail: string;
-      };
-      categories?: string[];
-      authors?: string[];
-    };
-  };
-}
-
-function truncateText(text: string, maxLength: number) {
-  return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
-}
-
-function BookCard({ book }: BookCardProps) {
+function BookCard({ book }: {book: Book}) {
   return (
     <CardContainer>
       <ImageContainer>

@@ -1,6 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { searchBooks, loadMoreBooks, setLastSearch } from './redux/actions';
 import SearchInput from './components/SearchInput';
 import CategorySelect from './components/CategorySelect';
 import SortingSelect from './components/SortingSelect';
@@ -11,26 +10,24 @@ import debounce from 'lodash/debounce';
 import LoadingSkeleton from './components/LoadingSkeleton';
 import { Button } from './components/styles/LoadMoreButton.styled';
 import { AppContainer, Title, SectionContainer, ErrorMessage, EmptySearchMessage } from './App.styled';
+import { setLastSearch } from './redux/getLastSearch';
+import { loadMoreBooks } from './redux/loadMoreBooks';
+import { searchBooks } from './redux/searchBooks';
 
 function App() {
   const [searchTerm, setSearchTerm] = useState('Exapmle');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sorting, setSorting] = useState('relevance');
   const dispatch = useDispatch();
-  const books = useAppSelector((state) => state.appState.books);
-  const error = useAppSelector((state) => state.appState.error);
-  const loading = useAppSelector((state) => state.appState.loading);
-  const loadingMore = useAppSelector((state) => state.appState.loadingMore);
+  const books = useAppSelector((state) => state.books);
+  const error = useAppSelector((state) => state.error);
+  const loading = useAppSelector((state) => state.loading);
+  const loadingMore = useAppSelector((state) => state.loadingMore);
 
-  const debouncedSearch = useCallback(
-    debounce(
+  const debouncedSearch = debounce(
       (searchTerm: string, category: string, sorting: string) => {
         dispatch(searchBooks(searchTerm, category, sorting));
-      },
-      300
-    ),
-    []
-  );
+      }, 300)
 
   const handleSearch = useCallback(() => {
     if (searchTerm.trim() === '') {

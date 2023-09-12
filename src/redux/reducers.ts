@@ -1,23 +1,12 @@
-import { combineReducers } from 'redux';
 import {
-  AppAction,
   SEARCH_BOOKS,
   LOAD_MORE_BOOKS,
   SET_ERROR,
   SET_LOADING,
-  Book,
   SET_LAST_SEARCH,
   SET_LOADING_MORE,
 } from './actions';
-
-interface AppState {
-  books: Book[];
-  error: string | null;
-  loading: boolean;
-  currentPage: number;
-  lastSearch: string;
-  loadingMore: boolean,
-}
+import { AppAction, AppState } from '../types';
 
 const initialState: AppState = {
   books: [],
@@ -68,8 +57,4 @@ const appReducer = (state = initialState, action: AppAction): AppState => {
   }
 };
 
-const rootReducer = combineReducers({
-  appState: appReducer,
-});
-
-export default rootReducer;
+export default appReducer;

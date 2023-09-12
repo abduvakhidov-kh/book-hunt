@@ -1,10 +1,6 @@
 import React from 'react';
 import { SelectContainer, Select } from './styles/CategorySelect.styled';
-
-interface CategorySelectProps {
-  selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
-}
+import { CategorySelectProps } from '../types';
 
 const CategorySelect: React.FC<CategorySelectProps> = ({
   selectedCategory,
