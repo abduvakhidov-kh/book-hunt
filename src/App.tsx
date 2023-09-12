@@ -8,16 +8,17 @@ import debounce from 'lodash/debounce';
 import LoadingSkeleton from './components/LoadingSkeleton';
 import { Button } from './components/styles/LoadMoreButton.styled';
 import { AppContainer, Title, SectionContainer, ErrorMessage, EmptySearchMessage } from './App.styled';
-import { setLastSearch } from './redux/getLastSearch';
+import { setLastSearch } from './redux/setLastSearch';
 import { loadMoreBooks } from './redux/loadMoreBooks';
 import { searchBooks } from './redux/searchBooks';
 import Select from './components/Select';
 import { categories, sortingOptions } from './constants';
+import { SearchValues } from './types';
 
 function App() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [sorting, setSorting] = useState('relevance');
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [sorting, setSorting] = useState<string>('relevance');
   const dispatch = useDispatch();
   const books = useAppSelector((state) => state.books);
   const error = useAppSelector((state) => state.error);
@@ -25,17 +26,19 @@ function App() {
   const loadingMore = useAppSelector((state) => state.loadingMore);
 
   const debouncedSearch = debounce(
-      (searchTerm: string, category: string, sorting: string) => {
-        dispatch(searchBooks(searchTerm, category, sorting));
+      (searchValues: SearchValues) => {
+        const { searchTerm, selectedCategory, sorting } = searchValues
+
+        dispatch(setLastSearch(searchValues));
+        dispatch(searchBooks(searchTerm, selectedCategory, sorting));
       }, 300)
 
   const handleSearch = useCallback(() => {
-    dispatch(setLastSearch(searchTerm));
-    debouncedSearch(searchTerm, selectedCategory, sorting);
+    debouncedSearch({searchTerm, selectedCategory, sorting});
   }, [searchTerm, selectedCategory, sorting]);
 
   const handleLoadMore = () => {
-    dispatch(loadMoreBooks(searchTerm));
+    dispatch(loadMoreBooks());
   };
 
   const getContent = () => {
@@ -50,7 +53,7 @@ function App() {
           {loadingMore ? (
             <LoadingSkeleton count={3} />
           ) : (
-            <Button onClick={handleLoadMore} />
+            <Button onClick={handleLoadMore}>Загрузить еще</Button>
           )}
         </>
       )

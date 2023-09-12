@@ -13,7 +13,11 @@ const initialState: AppState = {
   error: null,
   loading: false,
   currentPage: 1,
-  lastSearch: '',
+  lastSearch: {
+    searchTerm: "",
+    selectedCategory: "",
+    sorting: ""
+  },
   loadingMore: false,
 };
 

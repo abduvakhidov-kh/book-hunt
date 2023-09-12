@@ -34,7 +34,7 @@ export const searchBooks = (
       });
       dispatch({ type: SEARCH_BOOKS, payload: response.data.items });
     } catch (error) {
-      dispatch({ type: SET_ERROR, payload: 'Error fetching data from API' });
+      dispatch({ type: SET_ERROR, payload: 'Ошибка при загрузке данных' });
     } finally {
       dispatch({ type: SET_LOADING, payload: false });
     }

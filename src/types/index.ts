@@ -16,11 +16,6 @@ export interface BookListProps {
   books: Book[];
 }
 
-export interface CategorySelectProps {
-  selectedCategory: string;
-  setSelectedCategory: (category: string) => void;
-}
-
 export interface SelectOption {
   value: string
   title: string
@@ -38,14 +33,9 @@ export interface SearchInputProps {
   handleSearch: () => void;
 }
 
-export interface SortingSelectProps {
-  sorting: string;
-  setSorting: (sorting: string) => void;
-}
-
 export interface SetLastSearch {
   type: typeof SET_LAST_SEARCH,
-  payload: string,
+  payload: SearchValues,
 }
 
 export interface SearchBooksAction {
@@ -86,6 +76,12 @@ export interface AppState {
   error: string | null;
   loading: boolean;
   currentPage: number;
-  lastSearch: string;
+  lastSearch: SearchValues;
   loadingMore: boolean,
+}
+
+export interface SearchValues {
+  searchTerm: string;
+  sorting: string;
+  selectedCategory: string;
 }
